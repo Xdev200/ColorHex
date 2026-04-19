@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.colorhex.app",
+      "sha256_cert_fingerprints": [
+        "83:48:22:C8:7C:4C:B7:89:C8:9D:50:3C:B6:DC:E3:B8:65:D6:8B:39:4B:44:F7:D0:FD:63:4A:33:CC:7B:1B:79"
+      ]
+    }
+  }
+]

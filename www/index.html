@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="ColorHex – Train your color memory. Match the perfect HEX. Addictive color recognition game." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ColorHex" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+
+  <title>ColorHex – Color Memory Game</title>
+</head>
+<body>
+
+<!-- ===== CONFETTI CANVAS ===== -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ============================= -->
+<!-- SCREEN: MAIN MENU             -->
+<!-- ============================= -->
+<section id="screen-menu" class="screen active" aria-label="Main Menu">
+  <h1 class="logo"><span>Color</span>&nbsp;Hex</h1>
+  <p class="tagline">Can you match the perfect colour?</p>
+
+  <div class="score-bar">
+    <div>
+      <div class="score-label">Score</div>
+      <div class="score-val" id="menu-score">0</div>
+    </div>
+    <div style="text-align:right">
+      <div class="score-label">Best</div>
+      <div class="score-val" id="menu-highscore">0</div>
+    </div>
+  </div>
+
+  <div class="menu-phase-badges">
+    <div class="phase-badge" id="phase1-badge">⬤ Phase 1</div>
+    <div class="phase-badge" id="phase2-badge">⬤ Phase 2</div>
+    <div class="phase-badge" id="phase3-badge">⬤ Phase 3</div>
+  </div>
+
+  <div class="card" style="max-width:420px;width:100%">
+    <button class="btn" id="btn-play" aria-label="Play game">
+      ▶ PLAY
+    </button>
+    <button class="btn btn-white" id="btn-levels" aria-label="Level select">
+      ◈ LEVEL SELECT
+    </button>
+    <button class="btn btn-white" id="btn-progress" aria-label="View progress">
+      ◎ PROGRESS
+    </button>
+    <button class="btn btn-black" id="btn-how" aria-label="How to play">
+      ? HOW TO PLAY
+    </button>
+    <button class="btn btn-blue" id="install-btn" style="display:none" aria-label="Install app">
+      ⤓ INSTALL APP
+    </button>
+  </div>
+
+  <!-- Color Blind Toggle -->
+  <!-- <div class="cb-toggle-wrap" id="cb-toggle-wrap" role="switch" aria-checked="false" aria-label="Color blind mode toggle" tabindex="0">
+    <span>Color Blind Mode</span>
+    <div class="toggle-track" id="cb-track">
+      <div class="toggle-thumb"></div>
+    </div>
+  </div> -->
+</section>
+
+<!-- ============================= -->
+<!-- SCREEN: GAME                  -->
+<!-- ============================= -->
+<section id="screen-game" class="screen" aria-label="Game">
+  <div class="game-top-bar">
+    <button type="button" class="back-btn" id="game-back" aria-label="Back to menu">← Menu</button>
+    <div class="game-info" style="text-align:right">
+      <div id="game-phase-label">Phase 1</div>
+      <div><strong id="game-level-label">Level 1</strong></div>
+    </div>
+  </div>
+
+  <div class="level-indicator" id="game-level-display">Level 1 · 2 options</div>
+
+  <div class="timer-wrap">
+    <div class="timer-bar" id="timer-bar"></div>
+  </div>
+
+  <!-- Attempt dots -->
+  <div class="attempts-row" id="attempts-row"></div>
+
+  <!-- Color swatch -->
+  <div class="swatch-container">
+    <div class="color-circle" id="color-circle" role="img" aria-label="Study this color"></div>
+    <div class="hex-display" id="hex-display">#000000</div>
+  </div>
+
+  <!-- Instruction -->
+  <p class="instruction-text" id="instruction-text">Memorise this colour…</p>
+
+  <!-- Color grid -->
+  <div class="color-grid" id="color-grid" role="grid" aria-label="Color options" style="display:none"></div>
+</section>
+
+<!-- ============================= -->
+<!-- SCREEN: LEVEL SELECT          -->
+<!-- ============================= -->
+<section id="screen-levels" class="screen" aria-label="Level Select">
+  <button type="button" class="back-btn" id="levels-back" aria-label="Back to menu">← Menu</button>
+
+  <div class="section-title"><span>Level Select</span></div>
+
+  <!-- Phase tabs -->
+  <div class="phase-tabs" role="tablist">
+    <button class="phase-tab active" id="phase-tab-1" role="tab" aria-selected="true">Phase 1<br><small>Single</small></button>
+    <button class="phase-tab locked" id="phase-tab-2" role="tab" aria-selected="false">Phase 2<br><small>Blend×2</small></button>
+    <button class="phase-tab locked" id="phase-tab-3" role="tab" aria-selected="false">Phase 3<br><small>Blend×3</small></button>
+  </div>
+
+  <div class="levels-grid" id="levels-grid" role="grid"></div>
+</section>
+
+<!-- ============================= -->
+<!-- SCREEN: PROGRESS              -->
+<!-- ============================= -->
+<section id="screen-progress" class="screen" aria-label="Progress">
+  <button type="button" class="back-btn" id="progress-back" aria-label="Back to menu">← Menu</button>
+  <div class="section-title"><span>Progress</span></div>
+
+  <div class="score-bar" style="max-width:480px">
+    <div>
+      <div class="score-label">Total Score</div>
+      <div class="score-val" id="progress-total-score">0</div>
+    </div>
+    <div style="text-align:right">
+      <div class="score-label">High Score</div>
+      <div class="score-val" id="progress-high-score">0</div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-section">
+    <div class="phase-header">Phase 1 — Single Color</div>
+    <div class="phase-progress-bar"><div class="phase-progress-fill" id="progress-fill-1" style="width:0%"></div></div>
+    <div class="phase-stats" id="progress-stats-1"></div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase-section">
+    <div class="phase-header">Phase 2 — Two-Color Blend</div>
+    <div class="phase-progress-bar"><div class="phase-progress-fill" id="progress-fill-2" style="width:0%"></div></div>
+    <div class="phase-stats" id="progress-stats-2"></div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase-section">
+    <div class="phase-header">Phase 3 — Three-Color Blend</div>
+    <div class="phase-progress-bar"><div class="phase-progress-fill" id="progress-fill-3" style="width:0%"></div></div>
+    <div class="phase-stats" id="progress-stats-3"></div>
+  </div>
+</section>
+
+<!-- ============================= -->
+<!-- OVERLAY: RESULT               -->
+<!-- ============================= -->
+<div class="result-overlay" id="result-overlay" role="dialog" aria-modal="true" aria-label="Level result">
+  <div class="result-box">
+    <div class="result-icon" id="result-icon">🎯</div>
+    <div class="result-title" id="result-title">Correct!</div>
+    <div class="color-preview-row">
+      <div class="mini-swatch" id="result-swatch"></div>
+      <div id="result-stats" class="result-stats"></div>
+    </div>
+    <button class="btn btn-green" id="result-next-btn">Next Level →</button>
+    <button class="btn btn-white btn-sm" id="result-menu-btn">↩ Menu</button>
+  </div>
+</div>
+
+<!-- ============================= -->
+<!-- OVERLAY: PHASE UNLOCK         -->
+<!-- ============================= -->
+<div class="unlock-overlay" id="unlock-overlay" role="dialog" aria-modal="true" aria-label="Phase unlocked">
+  <div class="unlock-box">
+    <div style="font-size:3rem;margin-bottom:10px">🔓</div>
+    <div class="unlock-title" id="unlock-phase-name">Phase 2 Unlocked!</div>
+    <div class="unlock-sub" id="unlock-phase-desc">You've mastered Phase 1! Now challenge your eyes with two-color blending.</div>
+    <button class="btn btn-black" id="unlock-continue-btn">Continue →</button>
+  </div>
+</div>
+
+<!-- ============================= -->
+<!-- MODAL: HOW TO PLAY            -->
+<!-- ============================= -->
+<div class="modal-overlay" id="howtoplay-modal" role="dialog" aria-modal="true" aria-label="How to play">
+  <div class="modal-box">
+    <div class="modal-title">How to Play</div>
+
+    <div class="how-step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>Study the Color</strong>
+        A large circle shows a random color. You have a few seconds — memorise it!
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>Find the Match</strong>
+        The circle disappears. Pick the exact matching color from the grid.
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong>Level Up</strong>
+        Each level adds more color options — from 2 up to 64! The faster & fewer attempts, the higher your score.
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <strong>Unlock Phases</strong>
+        Complete all 32 levels to unlock Phase 2 (blend of 2 colors) and Phase 3 (blend of 3 colors).
+      </div>
+    </div>
+    <!-- <div class="how-step">
+      <div class="step-num">5</div>
+      <div class="step-text">
+        <strong>Color Blind Mode</strong>
+        Enable color blind mode on the menu to show HEX codes on each option square for accessibility.
+      </div>
+    </div> -->
+
+    <div style="margin-top:8px;padding:12px;background:#FFF9CC;border:2px solid #0a0a0a;border-radius:6px;font-size:0.75rem;font-family:var(--font-mono);line-height:1.7">
+      <b>Scoring:</b> 1000 base pts + time bonus − attempt penalty<br>
+      <b>Tip:</b> Wrong answers reveal the correct color briefly!
+    </div>
+
+    <button class="btn btn-black" id="howtoplay-close" style="margin-top:20px">Got it! ✓</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
