@@ -10,3 +10,4 @@
 - [x] Task 8: Generate and document Play Store visual assets (Icon, Graphic, Screenshots)
 - [x] Task 9: Generate Android APK/AAB and configure Capacitor
 - [x] Task 10: Integrate Google Analytics (GA4) with production-only tracking
+- [x] Task 11: Prepare project for Open Source (LICENSE, README, Contributing, CoC)
